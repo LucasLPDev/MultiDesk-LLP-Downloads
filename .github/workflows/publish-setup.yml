@@ -1,14 +1,14 @@
-name: Publish validated Setup 0.5.0
-run-name: Publish validated MultiDesk Setup 0.5.0
+name: Publish validated Setup 0.5.1
+run-name: Publish validated MultiDesk Setup 0.5.1
 on:
   workflow_dispatch:
     inputs:
       artifact_url:
-        description: Temporary read-only URL for validated private CI distribution artifact
+        description: Temporary read-only URL for validated distribution artifact
         required: true
         type: string
   repository_dispatch:
-    types: [publish-setup-0-5-0]
+    types: [publish-setup-0-5-1]
 permissions:
   contents: write
 concurrency:
@@ -24,8 +24,8 @@ jobs:
           DISTRIBUTION_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          python - <<'PY'
-          """One-time publication of the exact, privately validated MultiDesk 0.5.0 artifact.
+          python - <<'PYTHON'
+          """One-time publication of the exact, privately validated MultiDesk 0.5.1 artifact.
           No application code, personal access token, or persistent private-repository access
           is needed by this public workflow. The input URL only reads the distribution ZIP.
           """
@@ -42,20 +42,14 @@ jobs:
           import zipfile
           
           REPOSITORY = "LucasLPDev/MultiDesk-LLP-Downloads"
-          RELEASE_ID = 426210223
-          TAG = "v0.5.0"
-          ARCHIVE_SHA256 = "e94dcd1c1fbae35ebf40a480005c3a4834cf0c769a347d5b7f32abd25cd2b0fb"
-          ARCHIVE_SIZE = 120786393
-          INSTALLER = "MultiDesk-LLP-Setup-0.5.0.exe"
-          INSTALLER_SIZE = 120649929
-          INSTALLER_SHA512 = "VpGbqxq0u0HaFU54tMXmYtkEnkzmGsDc4RM9BFqer7S4FY1GQAoB6lcnYkVY9PGJ4swVw2py2K6faVgjjwd6Ng=="
-          EXPECTED = {
-              "latest.yml": "fbebb1a95f6e608cb3d6e9d3ddf03838545f08b48d3c3ae3469e4b8f0700138f",
-              INSTALLER: "23ad7a59c2e24270d9a5099a1d075bb7cb72bf0a1f3e51d8c3b34ee6b0a74925",
-              INSTALLER + ".blockmap": "36c469952793cd285c9ac10c0eba7e192c314fd3b0ad6ed17b37e67b2ca7f859",
-              # Hash includes the original Windows CRLF endings.
-              "SHA256SUMS.txt": "f5c8c7d8b53285737046fe919b559b42aac28800c0b9edbe605e0616d0eec3b7",
-          }
+          RELEASE_ID = 426258378
+          TAG = "v0.5.1"
+          ARCHIVE_SHA256 = '559c373930c503a8ea9be8c08e8307b769bf69dea8c885c83a656b49d159485d'
+          ARCHIVE_SIZE = 120790149
+          INSTALLER = "MultiDesk-LLP-Setup-0.5.1.exe"
+          INSTALLER_SIZE = 120653843
+          INSTALLER_SHA512 = 'nOnFFgboi0MZaq+Q/xY4TDndOsK3v17mXHvjCcbEeRgFjeu5T67f9+aLC5l2Ocvo56w2qcZOu9m2fOuAeNqMFA=='
+          EXPECTED = {'SHA256SUMS.txt': '2842f16f9c7550ab676a86e8496e847deebbf89aeae315a5f4ee007cb842587d', 'MultiDesk-LLP-Setup-0.5.1.exe.blockmap': '3b11790be32b5b6c7a7253ecc95d9747b9965d73b2c6a3bf72872f0394d289d3', 'MultiDesk-LLP-Setup-0.5.1.exe': '4d77ed14a7581f310af7ff499f6aa7bf3c2297710bc466c38ada2fd2b57903c0', 'latest.yml': '522553c47c5085e7ed818242cdf79fbb6a712ca1331f86a11893074def151ab9'}
           
           class NoRedirect(urllib.request.HTTPRedirectHandler):
               def redirect_request(self, req, fp, code, msg, headers, newurl):
@@ -89,7 +83,7 @@ jobs:
               ensure(len(assets[INSTALLER]) == INSTALLER_SIZE, "Installer size differs from validated CI")
               ensure(base64.b64encode(hashlib.sha512(assets[INSTALLER]).digest()).decode() == INSTALLER_SHA512, "Installer SHA-512 differs from validated CI")
               feed = assets["latest.yml"].decode("utf-8")
-              ensure("version: 0.5.0\n" in feed, "Feed version mismatch")
+              ensure("version: 0.5.1\n" in feed, "Feed version mismatch")
               ensure("path: " + INSTALLER + "\n" in feed, "Feed installer path mismatch")
               ensure("  - url: " + INSTALLER + "\n" in feed, "Feed installer URL mismatch")
               ensure("    size: " + str(INSTALLER_SIZE) + "\n" in feed, "Feed installer size mismatch")
@@ -161,16 +155,16 @@ jobs:
                   event = json.load(stream)
               payload = event.get("inputs", {}) if os.environ["GITHUB_EVENT_NAME"] == "workflow_dispatch" else event.get("client_payload", {})
               if os.environ["GITHUB_EVENT_NAME"] == "repository_dispatch":
-                  ensure(event.get("action") == "publish-setup-0-5-0", "Unexpected repository dispatch type")
+                  ensure(event.get("action") == "publish-setup-0-5-1", "Unexpected repository dispatch type")
               signed_url = payload.get("artifact_url", "")
               ensure(isinstance(signed_url, str) and 0 < len(signed_url) < 8192, "Artifact URL is missing or invalid")
               # Read from the event file; never interpolate an input into a shell or env.
               masked = signed_url.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
               print("::add-mask::" + masked, flush=True)
               parsed = urllib.parse.urlparse(signed_url)
-              ensure(parsed.scheme == "https" and parsed.hostname == "productionresultssa31.blob.core.windows.net", "Artifact URL host is not the reviewed GitHub Actions storage host")
+              ensure(parsed.scheme == "https" and parsed.hostname == "productionresultssa1.blob.core.windows.net", "Artifact URL host is not the reviewed GitHub Actions storage host")
               ensure(parsed.username is None and parsed.password is None and parsed.port in (None, 443) and not parsed.fragment, "Invalid artifact URL authority")
-              ensure(parsed.path.startswith("/actions-results/") and parsed.path.endswith("/34dc0a24cc1e80ccfeeab16c0adbef53ada1f2ca0619a4fe8315d71dcc2ded01.zip"), "Artifact URL is not the validated distribution archive")
+              ensure(parsed.path.startswith("/actions-results/") and parsed.path.endswith('/34dc0a24cc1e80ccfeeab16c0adbef53ada1f2ca0619a4fe8315d71dcc2ded01.zip'), "Artifact URL is not the validated distribution archive")
               query = urllib.parse.parse_qs(parsed.query)
               ensure(query.get("sp") == ["r"], "Artifact URL must grant read-only access")
               token = os.environ.get("DISTRIBUTION_TOKEN", "")
@@ -182,7 +176,7 @@ jobs:
               except Exception:
                   raise RuntimeError("Distribution archive could not be downloaded; the temporary URL may have expired") from None
               assets = checked_payload(archive)
-              print("Validated the exact four public distribution assets from private CI run 40620237996")
+              print("Validated the exact four public distribution assets from private CI run 40631189638")
               destination = api("", token)
               ensure(destination.get("full_name") == REPOSITORY and destination.get("private") is False, "Distribution repository must be public")
               release = api("/releases/" + str(RELEASE_ID), token)
@@ -207,4 +201,4 @@ jobs:
                   # No traceback, signed URL, or token is included in failure output.
                   print("Publication failed: " + str(error), file=sys.stderr)
                   sys.exit(1)
-          PY
+          PYTHON
