@@ -1,0 +1,2 @@
+a8872005ac402a6ada9512c61bf5a859bd4de1e2f9c7dd07fbac960aa5f201ef  catalog.json
+af5b5e7e53595069094a90ceec77d0e904922cbf6713c01ebe4cb8ed354e1111  packages/recorte-1.0.0.mdtheme.json
