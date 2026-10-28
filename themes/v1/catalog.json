@@ -1,0 +1,24 @@
+{
+  "formatVersion": 1,
+  "themes": [
+    {
+      "manifest": {
+        "id": "recorte",
+        "name": "Recorte",
+        "description": "Placas diagonais, contrastes intensos e recortes gráficos originais para o MultiDesk.",
+        "version": "1.0.0",
+        "engineVersion": 1,
+        "minAppVersion": "0.6.0"
+      },
+      "variant": "cutout",
+      "bytes": 814,
+      "sha256": "af5b5e7e53595069094a90ceec77d0e904922cbf6713c01ebe4cb8ed354e1111",
+      "url": "https://raw.githubusercontent.com/LucasLPDev/MultiDesk-LLP-Downloads/main/themes/v1/packages/recorte-1.0.0.mdtheme.json",
+      "preview": {
+        "background": "#08090B",
+        "surface": "#141419",
+        "accent": "#D7193F"
+      }
+    }
+  ]
+}
