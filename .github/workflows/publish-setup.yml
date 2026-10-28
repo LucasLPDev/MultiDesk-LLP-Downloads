@@ -1,0 +1,210 @@
+name: Publish validated Setup 0.5.0
+run-name: Publish validated MultiDesk Setup 0.5.0
+on:
+  workflow_dispatch:
+    inputs:
+      artifact_url:
+        description: Temporary read-only URL for validated private CI distribution artifact
+        required: true
+        type: string
+  repository_dispatch:
+    types: [publish-setup-0-5-0]
+permissions:
+  contents: write
+concurrency:
+  group: multidesk-setup-publication
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Verify exact distribution bytes and publish Setup
+        env:
+          DISTRIBUTION_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          """One-time publication of the exact, privately validated MultiDesk 0.5.0 artifact.
+          No application code, personal access token, or persistent private-repository access
+          is needed by this public workflow. The input URL only reads the distribution ZIP.
+          """
+          import base64
+          import hashlib
+          import io
+          import json
+          import os
+          import re
+          import sys
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+          import zipfile
+          
+          REPOSITORY = "LucasLPDev/MultiDesk-LLP-Downloads"
+          RELEASE_ID = 426210223
+          TAG = "v0.5.0"
+          ARCHIVE_SHA256 = "e94dcd1c1fbae35ebf40a480005c3a4834cf0c769a347d5b7f32abd25cd2b0fb"
+          ARCHIVE_SIZE = 120786393
+          INSTALLER = "MultiDesk-LLP-Setup-0.5.0.exe"
+          INSTALLER_SIZE = 120649929
+          INSTALLER_SHA512 = "VpGbqxq0u0HaFU54tMXmYtkEnkzmGsDc4RM9BFqer7S4FY1GQAoB6lcnYkVY9PGJ4swVw2py2K6faVgjjwd6Ng=="
+          EXPECTED = {
+              "latest.yml": "fbebb1a95f6e608cb3d6e9d3ddf03838545f08b48d3c3ae3469e4b8f0700138f",
+              INSTALLER: "23ad7a59c2e24270d9a5099a1d075bb7cb72bf0a1f3e51d8c3b34ee6b0a74925",
+              INSTALLER + ".blockmap": "36c469952793cd285c9ac10c0eba7e192c314fd3b0ad6ed17b37e67b2ca7f859",
+              # Hash includes the original Windows CRLF endings.
+              "SHA256SUMS.txt": "f5c8c7d8b53285737046fe919b559b42aac28800c0b9edbe605e0616d0eec3b7",
+          }
+          
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl):
+                  return None
+          
+          OPENER = urllib.request.build_opener(NoRedirect)
+          
+          def ensure(condition, message):
+              if not condition:
+                  raise RuntimeError(message)
+          
+          def sha256(data):
+              return hashlib.sha256(data).hexdigest()
+          
+          def checked_payload(archive):
+              ensure(len(archive) == ARCHIVE_SIZE, "Distribution archive size differs from validated CI")
+              ensure(sha256(archive) == ARCHIVE_SHA256, "Distribution archive SHA-256 differs from validated CI")
+              with zipfile.ZipFile(io.BytesIO(archive)) as package:
+                  entries = package.infolist()
+                  ensure(len(entries) == 4, "Distribution archive must contain exactly four assets")
+                  ensure(sorted(entry.filename for entry in entries) == sorted(EXPECTED), "Unexpected archive entry")
+                  for entry in entries:
+                      ensure(not entry.is_dir(), "Directories are not accepted")
+                      ensure(entry.create_system != 3 or (entry.external_attr >> 16) & 0o170000 != 0o120000, "Links are not accepted")
+                      ensure(not (entry.flag_bits & 1), "Encrypted entries are not accepted")
+                      ensure(0 < entry.file_size <= 128 * 1024 * 1024, "Invalid distribution asset size")
+                  assets = {entry.filename: package.read(entry) for entry in entries}
+              for name, digest in EXPECTED.items():
+                  ensure(sha256(assets[name]) == digest, "Asset SHA-256 differs from validated CI: " + name)
+              ensure(assets[INSTALLER][:2] == b"MZ", "Installer is not a Windows executable")
+              ensure(len(assets[INSTALLER]) == INSTALLER_SIZE, "Installer size differs from validated CI")
+              ensure(base64.b64encode(hashlib.sha512(assets[INSTALLER]).digest()).decode() == INSTALLER_SHA512, "Installer SHA-512 differs from validated CI")
+              feed = assets["latest.yml"].decode("utf-8")
+              ensure("version: 0.5.0\n" in feed, "Feed version mismatch")
+              ensure("path: " + INSTALLER + "\n" in feed, "Feed installer path mismatch")
+              ensure("  - url: " + INSTALLER + "\n" in feed, "Feed installer URL mismatch")
+              ensure("    size: " + str(INSTALLER_SIZE) + "\n" in feed, "Feed installer size mismatch")
+              ensure(feed.count("sha512: " + INSTALLER_SHA512) == 2, "Feed installer SHA-512 mismatch")
+              manifest = {}
+              for line in assets["SHA256SUMS.txt"].decode("utf-8-sig").splitlines():
+                  match = re.fullmatch(r"([a-f0-9]{64})  ([^/\\]+)", line)
+                  ensure(match and match[2] not in manifest, "Malformed checksum manifest")
+                  manifest[match[2]] = match[1]
+              ensure(manifest == {name: digest for name, digest in EXPECTED.items() if name != "SHA256SUMS.txt"}, "Checksum manifest mismatch")
+              return assets
+          
+          def api(path, token, method="GET", data=None):
+              url = "https://api.github.com/repos/" + REPOSITORY + path
+              headers = {
+                  "Authorization": "Bearer " + token,
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+                  "User-Agent": "MultiDesk-Distribution-Workflow",
+              }
+              if data is not None:
+                  headers["Content-Type"] = "application/json"
+                  data = json.dumps(data).encode()
+              request = urllib.request.Request(url, data=data, headers=headers, method=method)
+              try:
+                  with OPENER.open(request, timeout=60) as response:
+                      return json.load(response)
+              except urllib.error.HTTPError as error:
+                  raise RuntimeError("GitHub API operation returned HTTP " + str(error.code)) from None
+          
+          def verified_remote_assets(token, assets, complete):
+              remote = api("/releases/" + str(RELEASE_ID) + "/assets?per_page=100", token)
+              ensure(isinstance(remote, list), "Invalid remote asset listing")
+              ensure(len(remote) <= 4, "Release contains unexpected assets")
+              names = [item.get("name") for item in remote]
+              ensure(len(set(names)) == len(names), "Duplicate remote assets")
+              ensure(set(names).issubset(EXPECTED), "Unexpected remote asset")
+              if complete:
+                  ensure(set(names) == set(EXPECTED), "Release is missing distribution assets")
+              for item in remote:
+                  name = item["name"]
+                  ensure(item.get("state") == "uploaded", "Incomplete remote asset: " + name)
+                  ensure(item.get("size") == len(assets[name]), "Remote size mismatch: " + name)
+                  ensure(item.get("digest") == "sha256:" + EXPECTED[name], "Remote SHA-256 missing or mismatched: " + name)
+              return set(names)
+          
+          def upload(name, content, token):
+              # Fixed host and release ID: the token is never sent to the artifact URL.
+              url = "https://uploads.github.com/repos/" + REPOSITORY + "/releases/" + str(RELEASE_ID) + "/assets?name=" + urllib.parse.quote(name, safe="")
+              request = urllib.request.Request(url, data=content, method="POST", headers={
+                  "Authorization": "Bearer " + token,
+                  "Content-Type": "application/octet-stream",
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+                  "User-Agent": "MultiDesk-Distribution-Workflow",
+              })
+              try:
+                  with OPENER.open(request, timeout=240) as response:
+                      result = json.load(response)
+              except urllib.error.HTTPError as error:
+                  raise RuntimeError("Asset upload returned HTTP " + str(error.code)) from None
+              ensure(result.get("name") == name and result.get("digest") == "sha256:" + EXPECTED[name], "Uploaded asset verification failed: " + name)
+              print("Uploaded and verified: " + name)
+          
+          def main():
+              ensure(os.environ.get("GITHUB_REPOSITORY") == REPOSITORY, "Wrong workflow repository")
+              ensure(os.environ.get("GITHUB_EVENT_NAME") in ("workflow_dispatch", "repository_dispatch"), "Explicit publication dispatch required")
+              with open(os.environ["GITHUB_EVENT_PATH"], encoding="utf-8") as stream:
+                  event = json.load(stream)
+              payload = event.get("inputs", {}) if os.environ["GITHUB_EVENT_NAME"] == "workflow_dispatch" else event.get("client_payload", {})
+              if os.environ["GITHUB_EVENT_NAME"] == "repository_dispatch":
+                  ensure(event.get("action") == "publish-setup-0-5-0", "Unexpected repository dispatch type")
+              signed_url = payload.get("artifact_url", "")
+              ensure(isinstance(signed_url, str) and 0 < len(signed_url) < 8192, "Artifact URL is missing or invalid")
+              # Read from the event file; never interpolate an input into a shell or env.
+              masked = signed_url.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+              print("::add-mask::" + masked, flush=True)
+              parsed = urllib.parse.urlparse(signed_url)
+              ensure(parsed.scheme == "https" and parsed.hostname == "productionresultssa31.blob.core.windows.net", "Artifact URL host is not the reviewed GitHub Actions storage host")
+              ensure(parsed.username is None and parsed.password is None and parsed.port in (None, 443) and not parsed.fragment, "Invalid artifact URL authority")
+              ensure(parsed.path.startswith("/actions-results/") and parsed.path.endswith("/34dc0a24cc1e80ccfeeab16c0adbef53ada1f2ca0619a4fe8315d71dcc2ded01.zip"), "Artifact URL is not the validated distribution archive")
+              query = urllib.parse.parse_qs(parsed.query)
+              ensure(query.get("sp") == ["r"], "Artifact URL must grant read-only access")
+              token = os.environ.get("DISTRIBUTION_TOKEN", "")
+              ensure(bool(token), "Workflow repository token is missing")
+              request = urllib.request.Request(signed_url, headers={"User-Agent": "MultiDesk-Distribution-Workflow"})
+              try:
+                  with OPENER.open(request, timeout=180) as response:
+                      archive = response.read(ARCHIVE_SIZE + 1)
+              except Exception:
+                  raise RuntimeError("Distribution archive could not be downloaded; the temporary URL may have expired") from None
+              assets = checked_payload(archive)
+              print("Validated the exact four public distribution assets from private CI run 40620237996")
+              destination = api("", token)
+              ensure(destination.get("full_name") == REPOSITORY and destination.get("private") is False, "Distribution repository must be public")
+              release = api("/releases/" + str(RELEASE_ID), token)
+              ensure(release.get("id") == RELEASE_ID and release.get("tag_name") == TAG and release.get("prerelease") is False, "Unexpected release destination")
+              existing = verified_remote_assets(token, assets, complete=not release.get("draft"))
+              if not release.get("draft"):
+                  print("The exact validated release is already public")
+                  return
+              for name in EXPECTED:
+                  if name not in existing:
+                      upload(name, assets[name], token)
+              verified_remote_assets(token, assets, complete=True)
+              release = api("/releases/" + str(RELEASE_ID), token, "PATCH", {"draft": False, "prerelease": False, "make_latest": "true"})
+              ensure(release.get("draft") is False and release.get("prerelease") is False, "Release publication did not complete")
+              verified_remote_assets(token, assets, complete=True)
+              print("Published: https://github.com/" + REPOSITORY + "/releases/tag/" + TAG)
+          
+          if __name__ == "__main__":
+              try:
+                  main()
+              except Exception as error:
+                  # No traceback, signed URL, or token is included in failure output.
+                  print("Publication failed: " + str(error), file=sys.stderr)
+                  sys.exit(1)
+          PY
