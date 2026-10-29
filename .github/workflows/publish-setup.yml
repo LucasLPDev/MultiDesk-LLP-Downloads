@@ -189,7 +189,7 @@ jobs:
                   if name not in existing:
                       upload(name, assets[name], token)
               verified_remote_assets(token, assets, complete=True)
-              release = api("/releases/" + str(RELEASE_ID), token, "PATCH", {"draft": False, "prerelease": False, "make_latest": "true"})
+              release = api("/releases/" + str(RELEASE_ID), token, "PATCH", {"tag_name": TAG, "target_commitish": release["target_commitish"], "draft": False, "prerelease": False, "make_latest": "true"})
               ensure(release.get("draft") is False and release.get("prerelease") is False, "Release publication did not complete")
               verified_remote_assets(token, assets, complete=True)
               print("Published: https://github.com/" + REPOSITORY + "/releases/tag/" + TAG)
