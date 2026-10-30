@@ -1,0 +1,43 @@
+{
+  "formatVersion": 1,
+  "themes": [
+    {
+      "manifest": {
+        "id": "recorte",
+        "name": "Recorte",
+        "description": "Placas diagonais, contrastes intensos e recortes gráficos originais para o MultiDesk.",
+        "version": "1.0.0",
+        "engineVersion": 1,
+        "minAppVersion": "0.6.0"
+      },
+      "variant": "cutout",
+      "bytes": 814,
+      "sha256": "af5b5e7e53595069094a90ceec77d0e904922cbf6713c01ebe4cb8ed354e1111",
+      "url": "https://raw.githubusercontent.com/LucasLPDev/MultiDesk-LLP-Downloads/main/themes/v2/packages/recorte-1.0.0.mdtheme.json",
+      "preview": {
+        "background": "#08090B",
+        "surface": "#141419",
+        "accent": "#D7193F"
+      }
+    },
+    {
+      "manifest": {
+        "id": "expedition",
+        "name": "Expedição",
+        "description": "Um terminal de treinador: carcaça vermelha, painéis azuis e seleção dourada. Inspiração em Pokémon com desenhos próprios do MultiDesk.",
+        "version": "1.0.0",
+        "engineVersion": 1,
+        "minAppVersion": "0.10.0"
+      },
+      "variant": "expedition",
+      "bytes": 872,
+      "sha256": "c368d0c01eb5d22a8e7302bcba0733bb934d715d4aebd183818871f5b5821bce",
+      "url": "https://raw.githubusercontent.com/LucasLPDev/MultiDesk-LLP-Downloads/main/themes/v2/packages/expedition-1.0.0.mdtheme.json",
+      "preview": {
+        "background": "#0D1725",
+        "surface": "#142639",
+        "accent": "#B9263D"
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "formatVersion": 1,
+  "manifest": {
+    "id": "expedition",
+    "name": "Expedição",
+    "description": "Um terminal de treinador: carcaça vermelha, painéis azuis e seleção dourada. Inspiração em Pokémon com desenhos próprios do MultiDesk.",
+    "version": "1.0.0",
+    "engineVersion": 1,
+    "minAppVersion": "0.10.0"
+  },
+  "variant": "expedition",
+  "tokens": {
+    "background": "#0D1725",
+    "surface": "#142639",
+    "surfaceRaised": "#20374D",
+    "border": "#7190A9",
+    "text": "#F8FAFF",
+    "muted": "#C3D2DE",
+    "accent": "#B9263D",
+    "accentText": "#FFFFFF",
+    "selected": "#F6D66D",
+    "selectedText": "#182230",
+    "hover": "#294258",
+    "field": "#0A1D2B",
+    "danger": "#FFC2CC",
+    "success": "#B0E4C8",
+    "warning": "#FFE59C",
+    "focus": "#6CE2F3",
+    "radius": 8,
+    "shadow": "none",
+    "typography": "system"
+  }
+}

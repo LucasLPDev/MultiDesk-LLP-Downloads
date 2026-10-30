@@ -1,0 +1,33 @@
+{
+  "formatVersion": 1,
+  "manifest": {
+    "id": "recorte",
+    "name": "Recorte",
+    "description": "Placas diagonais, contrastes intensos e recortes gráficos originais para o MultiDesk.",
+    "version": "1.0.0",
+    "engineVersion": 1,
+    "minAppVersion": "0.6.0"
+  },
+  "variant": "cutout",
+  "tokens": {
+    "background": "#08090B",
+    "surface": "#141419",
+    "surfaceRaised": "#25262D",
+    "border": "#6B6D78",
+    "text": "#FFFFFF",
+    "muted": "#C9C9D1",
+    "accent": "#D7193F",
+    "accentText": "#FFFFFF",
+    "selected": "#FFFFFF",
+    "selectedText": "#101114",
+    "hover": "#3A3B43",
+    "field": "#0E0F13",
+    "danger": "#FFB9C6",
+    "success": "#AEE3CE",
+    "warning": "#F8D99D",
+    "focus": "#FFD34D",
+    "radius": 0,
+    "shadow": "none",
+    "typography": "system-condensed"
+  }
+}
