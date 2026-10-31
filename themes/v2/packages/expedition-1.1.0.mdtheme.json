@@ -1,0 +1,33 @@
+{
+  "formatVersion": 1,
+  "manifest": {
+    "id": "expedition",
+    "name": "Expedição",
+    "description": "Menus de DS em placas escuras, molduras claras e detalhes geométricos do C-Gear. Inspirado em Black 2/White 2, com identidade e sons originais do MultiDesk.",
+    "version": "1.1.0",
+    "engineVersion": 1,
+    "minAppVersion": "0.10.2"
+  },
+  "variant": "expedition",
+  "tokens": {
+    "background": "#101115",
+    "surface": "#1C1D23",
+    "surfaceRaised": "#292C34",
+    "border": "#8C929F",
+    "text": "#F5F6F8",
+    "muted": "#C2C8D1",
+    "accent": "#63D9ED",
+    "accentText": "#111C26",
+    "selected": "#E0EDF1",
+    "selectedText": "#141A23",
+    "hover": "#343A46",
+    "field": "#12151C",
+    "danger": "#FFBDC9",
+    "success": "#ABE8C8",
+    "warning": "#FFDC97",
+    "focus": "#80DFF5",
+    "radius": 0,
+    "shadow": "none",
+    "typography": "system"
+  }
+}

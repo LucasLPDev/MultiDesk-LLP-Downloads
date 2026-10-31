@@ -24,19 +24,19 @@
       "manifest": {
         "id": "expedition",
         "name": "Expedição",
-        "description": "Menus de aventura em pixel art: molduras retas, cursor de batalha e painéis de treinador inspirados nos clássicos GBA/DS. Arte original do MultiDesk.",
-        "version": "1.0.1",
+        "description": "Menus de DS em placas escuras, molduras claras e detalhes geométricos do C-Gear. Inspirado em Black 2/White 2, com identidade e sons originais do MultiDesk.",
+        "version": "1.1.0",
         "engineVersion": 1,
-        "minAppVersion": "0.10.1"
+        "minAppVersion": "0.10.2"
       },
       "variant": "expedition",
-      "bytes": 881,
-      "sha256": "de46e2cab3a682b49ca915867d91f437713acf9243cf5f2d81a571db187bb4d9",
-      "url": "https://raw.githubusercontent.com/LucasLPDev/MultiDesk-LLP-Downloads/main/themes/v2/packages/expedition-1.0.1.mdtheme.json",
+      "bytes": 887,
+      "sha256": "be82b5d8517062a82eb89f8e97617dcef1b1b8fc0b9515297f3108a406463fc9",
+      "url": "https://raw.githubusercontent.com/LucasLPDev/MultiDesk-LLP-Downloads/main/themes/v2/packages/expedition-1.1.0.mdtheme.json",
       "preview": {
-        "background": "#172C36",
-        "surface": "#203E47",
-        "accent": "#E9BA56"
+        "background": "#101115",
+        "surface": "#1C1D23",
+        "accent": "#63D9ED"
       }
     }
   ]
