@@ -24,19 +24,19 @@
       "manifest": {
         "id": "expedition",
         "name": "Expedição",
-        "description": "Menus de DS em placas escuras, molduras claras e detalhes geométricos do C-Gear. Inspirado em Black 2/White 2, com identidade e sons originais do MultiDesk.",
-        "version": "1.1.0",
+        "description": "Menus de DS em azul, ações vermelhas, seleção amarela e detalhes verdes do C-Gear. Inspirado em Black 2/White 2, com identidade e sons originais do MultiDesk.",
+        "version": "1.1.1",
         "engineVersion": 1,
-        "minAppVersion": "0.10.2"
+        "minAppVersion": "0.10.3"
       },
       "variant": "expedition",
-      "bytes": 887,
-      "sha256": "be82b5d8517062a82eb89f8e97617dcef1b1b8fc0b9515297f3108a406463fc9",
-      "url": "https://raw.githubusercontent.com/LucasLPDev/MultiDesk-LLP-Downloads/main/themes/v2/packages/expedition-1.1.0.mdtheme.json",
+      "bytes": 892,
+      "sha256": "603c3631bb95cade65b18d6750b6031a7b3dbb76548721bcd78ada0061069b21",
+      "url": "https://raw.githubusercontent.com/LucasLPDev/MultiDesk-LLP-Downloads/main/themes/v2/packages/expedition-1.1.1.mdtheme.json",
       "preview": {
-        "background": "#101115",
-        "surface": "#1C1D23",
-        "accent": "#63D9ED"
+        "background": "#112238",
+        "surface": "#19334E",
+        "accent": "#D53443"
       }
     }
   ]

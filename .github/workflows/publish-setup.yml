@@ -1,5 +1,5 @@
-name: Publish validated Setup 0.10.2
-run-name: Publish validated MultiDesk Setup 0.10.2
+name: Publish validated Setup 0.10.3
+run-name: Publish validated MultiDesk Setup 0.10.3
 on:
   workflow_dispatch:
     inputs:
@@ -8,7 +8,7 @@ on:
         required: true
         type: string
   repository_dispatch:
-    types: [publish-setup-0-10-2]
+    types: [publish-setup-0-10-3]
 permissions:
   contents: write
 concurrency:
@@ -25,7 +25,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PYTHON'
-          """One-time publication of the exact, privately validated MultiDesk 0.10.2 artifact.
+          """One-time publication of the exact, privately validated MultiDesk 0.10.3 artifact.
           No application code, personal access token, or persistent private-repository access
           is needed by this public workflow. The input URL only reads the distribution ZIP.
           """
@@ -42,15 +42,15 @@ jobs:
           import zipfile
           
           REPOSITORY = "LucasLPDev/MultiDesk-LLP-Downloads"
-          RELEASE_ID = 429966557
-          TAG = "v0.10.2"
-          ARCHIVE_SHA256 = '4d1465452cde93d838b119c0f53e50906db5b7d08dcd1f078c185ce745f67581'
-          ARCHIVE_SIZE = 121227914
-          INSTALLER = "MultiDesk-LLP-Setup-0.10.2.exe"
-          INSTALLER_SIZE = 121085702
-          INSTALLER_SHA512 = 'RuOpEw89ObpgFKvP3JaFs7yFvxd5gFbl9rw3PfPR/JRwrHvNYnlaq+3D1aQb6k9HMn9PpUgMyrPd/mVEhd/LZQ=='
-          EXPECTED = {'latest.yml': 'f4a192c137db554ee53bd9bb6de01f7a787ff47441e709c7298cb92776b68722', 'MultiDesk-LLP-Setup-0.10.2.exe': '25d042afcf3d426e4d05cc434bf0074b5e9668486dd7f813a9c86a0ac20b8185', 'MultiDesk-LLP-Setup-0.10.2.exe.blockmap': '6878a156577d82405bc7623d4bc9a5ccf4f09ca70eb9cf1ed0f48f6128b12562', 'SHA256SUMS.txt': '0cd3b79023e14c95d444cab94df147bcdacf0e2baa94e818f7c21689042cad17'}
-          ARCHIVE_ENTRIES = {'release/latest.yml': 'f4a192c137db554ee53bd9bb6de01f7a787ff47441e709c7298cb92776b68722', 'release/MultiDesk-LLP-Setup-0.10.2.exe': '25d042afcf3d426e4d05cc434bf0074b5e9668486dd7f813a9c86a0ac20b8185', 'release/MultiDesk-LLP-Setup-0.10.2.exe.blockmap': '6878a156577d82405bc7623d4bc9a5ccf4f09ca70eb9cf1ed0f48f6128b12562', 'release/SHA256SUMS.txt': '0cd3b79023e14c95d444cab94df147bcdacf0e2baa94e818f7c21689042cad17', 'theme-dist/catalog.json': '2a125c51b1cc8691db1fa89eb0b23f6cc6d9eb71da755eaa65eca2f88112fceb', 'theme-dist/SHA256SUMS.txt': '7f187e08f5a358979a7f7c122bd96ed95343f6a48ed7e6d6feba8c243ff244bf', 'theme-dist/packages/expedition-1.1.0.mdtheme.json': 'be82b5d8517062a82eb89f8e97617dcef1b1b8fc0b9515297f3108a406463fc9', 'theme-dist/packages/recorte-1.0.0.mdtheme.json': 'af5b5e7e53595069094a90ceec77d0e904922cbf6713c01ebe4cb8ed354e1111'}
+          RELEASE_ID = 430010784
+          TAG = "v0.10.3"
+          ARCHIVE_SHA256 = '2f0a98310afc07306933d264d900dac3613ee1deb2323fdd74f6ce42870d9f81'
+          ARCHIVE_SIZE = 121228025
+          INSTALLER = "MultiDesk-LLP-Setup-0.10.3.exe"
+          INSTALLER_SIZE = 121085881
+          INSTALLER_SHA512 = '2vu3kmEbVlMzN4qMNWB62LJLBhP2Qtc1Es0udJHI6DpQ3+Wuu0CDBfozuoeYc1ls0y0VdZc/ZewYX97hZa2v1Q=='
+          EXPECTED = {'latest.yml': 'fa34cf3a72eb437c960ab0069a7946c69635ebd1737658b6d963bc5b34fb6a9b', 'MultiDesk-LLP-Setup-0.10.3.exe': 'f68cce977cf83e95621f0ab3df870aff86651ca1a80ffcbf24622238c37cd8f4', 'MultiDesk-LLP-Setup-0.10.3.exe.blockmap': 'cbbafd5b86683ac9261e738fe9be700f5a02fc1942829d3fc2b191b604b9bbc5', 'SHA256SUMS.txt': '0cf04844678cbf165a2b6ed223a9e949e8840915e6889bad3c98a4608d473390'}
+          ARCHIVE_ENTRIES = {'release/latest.yml': 'fa34cf3a72eb437c960ab0069a7946c69635ebd1737658b6d963bc5b34fb6a9b', 'release/MultiDesk-LLP-Setup-0.10.3.exe': 'f68cce977cf83e95621f0ab3df870aff86651ca1a80ffcbf24622238c37cd8f4', 'release/MultiDesk-LLP-Setup-0.10.3.exe.blockmap': 'cbbafd5b86683ac9261e738fe9be700f5a02fc1942829d3fc2b191b604b9bbc5', 'release/SHA256SUMS.txt': '0cf04844678cbf165a2b6ed223a9e949e8840915e6889bad3c98a4608d473390', 'theme-dist/catalog.json': 'c9c768bcd2db8c23c47c26956506468e1c533a037f6193974fc4f5535163750e', 'theme-dist/SHA256SUMS.txt': '5b994f3d4fd094eadcd80d995fc22a7c63cb6a13bde4c2777fedb9a12fba2cb3', 'theme-dist/packages/expedition-1.1.1.mdtheme.json': '603c3631bb95cade65b18d6750b6031a7b3dbb76548721bcd78ada0061069b21', 'theme-dist/packages/recorte-1.0.0.mdtheme.json': 'af5b5e7e53595069094a90ceec77d0e904922cbf6713c01ebe4cb8ed354e1111'}
           
           class NoRedirect(urllib.request.HTTPRedirectHandler):
               def redirect_request(self, req, fp, code, msg, headers, newurl):
@@ -89,7 +89,7 @@ jobs:
               ensure(len(assets[INSTALLER]) == INSTALLER_SIZE, "Installer size differs from validated CI")
               ensure(base64.b64encode(hashlib.sha512(assets[INSTALLER]).digest()).decode() == INSTALLER_SHA512, "Installer SHA-512 differs from validated CI")
               feed = assets["latest.yml"].decode("utf-8")
-              ensure("version: 0.10.2\n" in feed, "Feed version mismatch")
+              ensure("version: 0.10.3\n" in feed, "Feed version mismatch")
               ensure("path: " + INSTALLER + "\n" in feed, "Feed installer path mismatch")
               ensure("  - url: " + INSTALLER + "\n" in feed, "Feed installer URL mismatch")
               ensure("    size: " + str(INSTALLER_SIZE) + "\n" in feed, "Feed installer size mismatch")
@@ -161,7 +161,7 @@ jobs:
                   event = json.load(stream)
               payload = event.get("inputs", {}) if os.environ["GITHUB_EVENT_NAME"] == "workflow_dispatch" else event.get("client_payload", {})
               if os.environ["GITHUB_EVENT_NAME"] == "repository_dispatch":
-                  ensure(event.get("action") == "publish-setup-0-10-2", "Unexpected repository dispatch type")
+                  ensure(event.get("action") == "publish-setup-0-10-3", "Unexpected repository dispatch type")
               signed_url = payload.get("artifact_url", "")
               ensure(isinstance(signed_url, str) and 0 < len(signed_url) < 8192, "Artifact URL is missing or invalid")
               # Read from the event file; never interpolate an input into a shell or env.
@@ -170,7 +170,7 @@ jobs:
               parsed = urllib.parse.urlparse(signed_url)
               ensure(parsed.scheme == "https" and parsed.hostname == 'release-assets.githubusercontent.com', "Artifact URL host is not the reviewed GitHub release asset host")
               ensure(parsed.username is None and parsed.password is None and parsed.port in (None, 443) and not parsed.fragment, "Invalid artifact URL authority")
-              ensure(parsed.path == '/github-production-release-asset/1436089111/74c418b3-8812-4904-90ad-2ba28c918821', "Artifact URL is not the validated distribution archive")
+              ensure(parsed.path == '/github-production-release-asset/1436089111/a527dda9-bb9c-48b8-832a-4899c7918172', "Artifact URL is not the validated distribution archive")
               query = urllib.parse.parse_qs(parsed.query)
               ensure(query.get("sp") == ["r"], "Artifact URL must grant read-only access")
               token = os.environ.get("DISTRIBUTION_TOKEN", "")
