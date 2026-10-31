@@ -24,19 +24,19 @@
       "manifest": {
         "id": "expedition",
         "name": "Expedição",
-        "description": "Um terminal de treinador: carcaça vermelha, painéis azuis e seleção dourada. Inspiração em Pokémon com desenhos próprios do MultiDesk.",
-        "version": "1.0.0",
+        "description": "Menus de aventura em pixel art: molduras retas, cursor de batalha e painéis de treinador inspirados nos clássicos GBA/DS. Arte original do MultiDesk.",
+        "version": "1.0.1",
         "engineVersion": 1,
-        "minAppVersion": "0.10.0"
+        "minAppVersion": "0.10.1"
       },
       "variant": "expedition",
-      "bytes": 872,
-      "sha256": "c368d0c01eb5d22a8e7302bcba0733bb934d715d4aebd183818871f5b5821bce",
-      "url": "https://raw.githubusercontent.com/LucasLPDev/MultiDesk-LLP-Downloads/main/themes/v2/packages/expedition-1.0.0.mdtheme.json",
+      "bytes": 881,
+      "sha256": "de46e2cab3a682b49ca915867d91f437713acf9243cf5f2d81a571db187bb4d9",
+      "url": "https://raw.githubusercontent.com/LucasLPDev/MultiDesk-LLP-Downloads/main/themes/v2/packages/expedition-1.0.1.mdtheme.json",
       "preview": {
-        "background": "#0D1725",
-        "surface": "#142639",
-        "accent": "#B9263D"
+        "background": "#172C36",
+        "surface": "#203E47",
+        "accent": "#E9BA56"
       }
     }
   ]

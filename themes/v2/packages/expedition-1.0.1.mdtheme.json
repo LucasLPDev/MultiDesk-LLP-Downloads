@@ -1,0 +1,33 @@
+{
+  "formatVersion": 1,
+  "manifest": {
+    "id": "expedition",
+    "name": "Expedição",
+    "description": "Menus de aventura em pixel art: molduras retas, cursor de batalha e painéis de treinador inspirados nos clássicos GBA/DS. Arte original do MultiDesk.",
+    "version": "1.0.1",
+    "engineVersion": 1,
+    "minAppVersion": "0.10.1"
+  },
+  "variant": "expedition",
+  "tokens": {
+    "background": "#172C36",
+    "surface": "#203E47",
+    "surfaceRaised": "#2B5058",
+    "border": "#A8C6B1",
+    "text": "#F4F4D5",
+    "muted": "#C9D9BE",
+    "accent": "#E9BA56",
+    "accentText": "#1C2E32",
+    "selected": "#E6EDCB",
+    "selectedText": "#172E38",
+    "hover": "#385B61",
+    "field": "#122D34",
+    "danger": "#FFC2CC",
+    "success": "#B0E4C8",
+    "warning": "#FFE59C",
+    "focus": "#FFE08A",
+    "radius": 0,
+    "shadow": "none",
+    "typography": "system"
+  }
+}

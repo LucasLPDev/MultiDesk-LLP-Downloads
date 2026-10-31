@@ -1,0 +1,3 @@
+1a6094b441575173361dd86e54c8415d0e9afe62a8e1036c06c54e8b242b8d90  catalog.json
+af5b5e7e53595069094a90ceec77d0e904922cbf6713c01ebe4cb8ed354e1111  packages/recorte-1.0.0.mdtheme.json
+de46e2cab3a682b49ca915867d91f437713acf9243cf5f2d81a571db187bb4d9  packages/expedition-1.0.1.mdtheme.json
