@@ -1,5 +1,5 @@
-name: Publish validated Setup 0.10.0
-run-name: Publish validated MultiDesk Setup 0.10.0
+name: Publish validated Setup 0.10.1
+run-name: Publish validated MultiDesk Setup 0.10.1
 on:
   workflow_dispatch:
     inputs:
@@ -8,7 +8,7 @@ on:
         required: true
         type: string
   repository_dispatch:
-    types: [publish-setup-0-10-0]
+    types: [publish-setup-0-10-1]
 permissions:
   contents: write
 concurrency:
@@ -25,7 +25,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PYTHON'
-          """One-time publication of the exact, privately validated MultiDesk 0.10.0 artifact.
+          """One-time publication of the exact, privately validated MultiDesk 0.10.1 artifact.
           No application code, personal access token, or persistent private-repository access
           is needed by this public workflow. The input URL only reads the distribution ZIP.
           """
@@ -42,14 +42,15 @@ jobs:
           import zipfile
           
           REPOSITORY = "LucasLPDev/MultiDesk-LLP-Downloads"
-          RELEASE_ID = 429402773
-          TAG = "v0.10.0"
-          ARCHIVE_SHA256 = 'ef9077e4c88fb5d57a6e83f6cb244d0b8fd4f23473aaf5317e773354df26064f'
-          ARCHIVE_SIZE = 121214933
-          INSTALLER = "MultiDesk-LLP-Setup-0.10.0.exe"
-          INSTALLER_SIZE = 121075008
-          INSTALLER_SHA512 = 'zNEugPD+Ll/ufKhA2lEuE1tT8GBfe6l3oDD4xW62sU1cAIH5pYht4IcvT+8zh66tLy+1+gs55aDu7qg5z1j/2w=='
-          EXPECTED = {'MultiDesk-LLP-Setup-0.10.0.exe': '568d6723604946ffa87f251e79906749ac81297a020226a14241ec4bfd96675c', 'MultiDesk-LLP-Setup-0.10.0.exe.blockmap': '26fec34fc707c9936a0929c185ef75b37f78aa87f21bd20238b497c04216712e', 'latest.yml': 'daf591e1a63f606fb65493e7cee411119ff2b46a1e871855eb749e2a8820d6a3', 'SHA256SUMS.txt': '331ccaf1bac51e42d75c8bb0433b89eb594dc08d08d23ed427648e02d610cae5'}
+          RELEASE_ID = 429912514
+          TAG = "v0.10.1"
+          ARCHIVE_SHA256 = '2f91913ea69041e139800e1445046cdac4266cfb457b75192723e67ca64359e7'
+          ARCHIVE_SIZE = 121225844
+          INSTALLER = "MultiDesk-LLP-Setup-0.10.1.exe"
+          INSTALLER_SIZE = 121083759
+          INSTALLER_SHA512 = 'ajVWPgOEPLOcAnFWH2+Q1mj8evtSjDbDCqoz+b+IGaPicmWlES+aIeo/wOUxYuVjx0jU1Gflajxr3PJdWb+7Uw=='
+          EXPECTED = {'MultiDesk-LLP-Setup-0.10.1.exe.blockmap': '7a21339e0e960e4025121ac07f896bbc50d4b964faee340f438a06ac07a5c4ec', 'MultiDesk-LLP-Setup-0.10.1.exe': '4236b3839b284e7d4df2b4f0541b4be880671a9c2ea95046363a1c9eabee74a7', 'latest.yml': 'fe1689328f17ed4ec87d9fcc71bb54bd1e82c49a614254ced7a67bc3b49a81cc', 'SHA256SUMS.txt': 'ecff206bd1f9c00ec21108354bf589e7f8493788a3588b8f0a540b79f453519f'}
+          ARCHIVE_ENTRIES = {'theme-dist/SHA256SUMS.txt': '7bc35fce3fc902f1c87ad07cf1855ddfcdf3698fb23651e53716306d1d2a573b', 'theme-dist/catalog.json': '1a6094b441575173361dd86e54c8415d0e9afe62a8e1036c06c54e8b242b8d90', 'release/MultiDesk-LLP-Setup-0.10.1.exe.blockmap': '7a21339e0e960e4025121ac07f896bbc50d4b964faee340f438a06ac07a5c4ec', 'release/MultiDesk-LLP-Setup-0.10.1.exe': '4236b3839b284e7d4df2b4f0541b4be880671a9c2ea95046363a1c9eabee74a7', 'release/latest.yml': 'fe1689328f17ed4ec87d9fcc71bb54bd1e82c49a614254ced7a67bc3b49a81cc', 'theme-dist/packages/recorte-1.0.0.mdtheme.json': 'af5b5e7e53595069094a90ceec77d0e904922cbf6713c01ebe4cb8ed354e1111', 'theme-dist/packages/expedition-1.0.1.mdtheme.json': 'de46e2cab3a682b49ca915867d91f437713acf9243cf5f2d81a571db187bb4d9'}
           
           class NoRedirect(urllib.request.HTTPRedirectHandler):
               def redirect_request(self, req, fp, code, msg, headers, newurl):
@@ -69,21 +70,27 @@ jobs:
               ensure(sha256(archive) == ARCHIVE_SHA256, "Distribution archive SHA-256 differs from validated CI")
               with zipfile.ZipFile(io.BytesIO(archive)) as package:
                   entries = package.infolist()
-                  ensure(len(entries) == 4, "Distribution archive must contain exactly four assets")
-                  ensure(sorted(entry.filename for entry in entries) == sorted(EXPECTED), "Unexpected archive entry")
+                  ensure(len(entries) == len(ARCHIVE_ENTRIES), "Distribution archive entry count differs from validated CI")
+                  ensure(sorted(entry.filename for entry in entries) == sorted(ARCHIVE_ENTRIES), "Unexpected archive entry")
                   for entry in entries:
                       ensure(not entry.is_dir(), "Directories are not accepted")
                       ensure(entry.create_system != 3 or (entry.external_attr >> 16) & 0o170000 != 0o120000, "Links are not accepted")
                       ensure(not (entry.flag_bits & 1), "Encrypted entries are not accepted")
                       ensure(0 < entry.file_size <= 128 * 1024 * 1024, "Invalid distribution asset size")
-                  assets = {entry.filename: package.read(entry) for entry in entries}
+                  payload = {entry.filename: package.read(entry) for entry in entries}
+              for name, digest in ARCHIVE_ENTRIES.items():
+                  ensure(sha256(payload[name]) == digest, "Archive payload differs from validated CI: " + name)
+              # Only the installer, blockmap and feed are released. Themes are
+              # published separately under themes/v2; never as app release assets.
+              assets = {name: payload["release/" + name] for name in EXPECTED if name != "SHA256SUMS.txt"}
+              assets["SHA256SUMS.txt"] = "".join(EXPECTED[name] + "  " + name + "\n" for name in sorted(assets)).encode()
               for name, digest in EXPECTED.items():
                   ensure(sha256(assets[name]) == digest, "Asset SHA-256 differs from validated CI: " + name)
               ensure(assets[INSTALLER][:2] == b"MZ", "Installer is not a Windows executable")
               ensure(len(assets[INSTALLER]) == INSTALLER_SIZE, "Installer size differs from validated CI")
               ensure(base64.b64encode(hashlib.sha512(assets[INSTALLER]).digest()).decode() == INSTALLER_SHA512, "Installer SHA-512 differs from validated CI")
               feed = assets["latest.yml"].decode("utf-8")
-              ensure("version: 0.10.0\n" in feed, "Feed version mismatch")
+              ensure("version: 0.10.1\n" in feed, "Feed version mismatch")
               ensure("path: " + INSTALLER + "\n" in feed, "Feed installer path mismatch")
               ensure("  - url: " + INSTALLER + "\n" in feed, "Feed installer URL mismatch")
               ensure("    size: " + str(INSTALLER_SIZE) + "\n" in feed, "Feed installer size mismatch")
@@ -155,16 +162,16 @@ jobs:
                   event = json.load(stream)
               payload = event.get("inputs", {}) if os.environ["GITHUB_EVENT_NAME"] == "workflow_dispatch" else event.get("client_payload", {})
               if os.environ["GITHUB_EVENT_NAME"] == "repository_dispatch":
-                  ensure(event.get("action") == "publish-setup-0-10-0", "Unexpected repository dispatch type")
+                  ensure(event.get("action") == "publish-setup-0-10-1", "Unexpected repository dispatch type")
               signed_url = payload.get("artifact_url", "")
               ensure(isinstance(signed_url, str) and 0 < len(signed_url) < 8192, "Artifact URL is missing or invalid")
               # Read from the event file; never interpolate an input into a shell or env.
               masked = signed_url.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
               print("::add-mask::" + masked, flush=True)
               parsed = urllib.parse.urlparse(signed_url)
-              ensure(parsed.scheme == "https" and parsed.hostname == "productionresultssa12.blob.core.windows.net", "Artifact URL host is not the reviewed GitHub Actions storage host")
+              ensure(parsed.scheme == "https" and parsed.hostname == 'productionresultssa15.blob.core.windows.net', "Artifact URL host is not the reviewed GitHub Actions storage host")
               ensure(parsed.username is None and parsed.password is None and parsed.port in (None, 443) and not parsed.fragment, "Invalid artifact URL authority")
-              ensure(parsed.path == '/actions-results/c5a69158-d445-89db-be86-66cf258a9082/workflow-job-run-27c10039-814b-59e2-a9d4-8102c9ab2752/artifacts/34dc0a24cc1e80ccfeeab16c0adbef53ada1f2ca0619a4fe8315d71dcc2ded01.zip', "Artifact URL is not the validated distribution archive")
+              ensure(parsed.path == '/actions-results/904b5db5-4bc0-8c8e-9a39-4eb182d45200/workflow-job-run-b5b49cf1-c02f-576b-b647-92f6ff0c4378/artifacts/3b05afebc8e2b539f936d168bb438a90af302bd76006cd1100fe2a854c457068.zip', "Artifact URL is not the validated distribution archive")
               query = urllib.parse.parse_qs(parsed.query)
               ensure(query.get("sp") == ["r"], "Artifact URL must grant read-only access")
               token = os.environ.get("DISTRIBUTION_TOKEN", "")
@@ -176,7 +183,7 @@ jobs:
               except Exception:
                   raise RuntimeError("Distribution archive could not be downloaded; the temporary URL may have expired") from None
               assets = checked_payload(archive)
-              print("Validated the exact four public distribution assets from private CI run 41112644403")
+              print("Validated the exact four public distribution assets from private CI run 41155063686 (Windows, Node, patch and NSIS passed; QOL confirmed by run 41155415056)")
               destination = api("", token)
               ensure(destination.get("full_name") == REPOSITORY and destination.get("private") is False, "Distribution repository must be public")
               release = api("/releases/" + str(RELEASE_ID), token)
