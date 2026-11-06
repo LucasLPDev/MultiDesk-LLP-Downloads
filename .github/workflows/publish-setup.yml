@@ -1,14 +1,11 @@
 name: Publish validated Setup 0.11.1
 run-name: Publish validated MultiDesk Setup 0.11.1
+# The temporary read URL of the private candidate carries a credential. It never
+# appears in logs, inputs or chat: this run creates a one-off key pair, prints only
+# the public key, and waits for .github/publish-request.enc on its own branch, which
+# holds the URL encrypted to that key by the private repository's URL workflow.
 on:
   workflow_dispatch:
-    inputs:
-      artifact_url:
-        description: Temporary read-only URL for validated distribution artifact
-        required: true
-        type: string
-  repository_dispatch:
-    types: [publish-setup-0-11-1]
 permissions:
   contents: write
 concurrency:
@@ -17,17 +14,56 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 35
     steps:
+      - uses: actions/checkout@v5
+      - name: Receive the encrypted temporary URL
+        id: handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/handoff"
+          mkdir -m 700 "$work"
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out "$work/private.pem" 2>/dev/null
+          chmod 600 "$work/private.pem"
+          echo "PUBLICATION_PUBLIC_KEY $(openssl pkey -in "$work/private.pem" -pubout | base64 -w0)"
+          # Logs of a running job are not readable through the API: publish the public key
+          # on this branch so the requester can encrypt the URL to it.
+          openssl pkey -in "$work/private.pem" -pubout -out .github/publish-key.pem
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/publish-key.pem
+          git commit -q -m "One-off publication key for run $GITHUB_RUN_ID"
+          git push -q origin "HEAD:$GITHUB_REF_NAME"
+          for attempt in $(seq 1 120); do
+            sleep 10
+            git fetch -q origin "$GITHUB_REF_NAME" || continue
+            git show "FETCH_HEAD:.github/publish-request.enc" > "$work/request" 2>/dev/null || continue
+            key="$(sed -n 's/^CANDIDATE_URL_KEY //p' "$work/request")"
+            data="$(sed -n 's/^CANDIDATE_URL_DATA //p' "$work/request")"
+            [ -n "$key" ] && [ -n "$data" ] || continue
+            printf '%s' "$key" | base64 -d > "$work/k.enc" 2>/dev/null || continue
+            # A request for an earlier run's key does not decrypt here; keep waiting.
+            openssl pkeyutl -decrypt -inkey "$work/private.pem" -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256 -in "$work/k.enc" -out "$work/k" 2>/dev/null || continue
+            printf '%s' "$data" | base64 -d > "$work/d.enc"
+            openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -pass "file:$work/k" -in "$work/d.enc" -out "$work/url"
+            rm -f "$work/k" "$work/private.pem"
+            echo "url_file=$work/url" >> "$GITHUB_OUTPUT"
+            echo "Received the URL encrypted to this run's key"
+            exit 0
+          done
+          echo "No request encrypted to this run's key arrived in 20 minutes"
+          exit 1
       - name: Verify exact distribution bytes and publish Setup
         env:
           DISTRIBUTION_TOKEN: ${{ github.token }}
+          ARTIFACT_URL_FILE: ${{ steps.handoff.outputs.url_file }}
         shell: bash
         run: |
           python - <<'PYTHON'
           """One-time publication of the exact, privately validated MultiDesk 0.11.1 artifact.
           No application code, personal access token, or persistent private-repository access
-          is needed by this public workflow. The input URL only reads the distribution ZIP.
+          is needed by this public workflow. The handed-off URL only reads the distribution ZIP.
           """
           import base64
           import hashlib
@@ -160,13 +196,10 @@ jobs:
           
           def main():
               ensure(os.environ.get("GITHUB_REPOSITORY") == REPOSITORY, "Wrong workflow repository")
-              ensure(os.environ.get("GITHUB_EVENT_NAME") in ("workflow_dispatch", "repository_dispatch"), "Explicit publication dispatch required")
-              with open(os.environ["GITHUB_EVENT_PATH"], encoding="utf-8") as stream:
-                  event = json.load(stream)
-              payload = event.get("inputs", {}) if os.environ["GITHUB_EVENT_NAME"] == "workflow_dispatch" else event.get("client_payload", {})
-              if os.environ["GITHUB_EVENT_NAME"] == "repository_dispatch":
-                  ensure(event.get("action") == "publish-setup-0-11-1", "Unexpected repository dispatch type")
-              signed_url = payload.get("artifact_url", "")
+              ensure(os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch", "Explicit publication dispatch required")
+              with open(os.environ["ARTIFACT_URL_FILE"], encoding="utf-8") as stream:
+                  signed_url = stream.read().strip()
+              os.remove(os.environ["ARTIFACT_URL_FILE"])
               ensure(isinstance(signed_url, str) and 0 < len(signed_url) < 8192, "Artifact URL is missing or invalid")
               # Read from the event file; never interpolate an input into a shell or env.
               masked = signed_url.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
