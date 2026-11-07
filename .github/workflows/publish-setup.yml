@@ -1,5 +1,5 @@
-name: Publish validated Setup 0.11.1
-run-name: Publish validated MultiDesk Setup 0.11.1
+name: Publish validated Setup 0.11.2
+run-name: Publish validated MultiDesk Setup 0.11.2
 # The temporary read URL of the private candidate carries a credential. It never
 # appears in logs, inputs or chat: this run creates a one-off key pair, prints only
 # the public key, and waits for .github/publish-request.enc on its own branch, which
@@ -61,7 +61,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PYTHON'
-          """One-time publication of the exact, privately validated MultiDesk 0.11.1 artifact.
+          """One-time publication of the exact, privately validated MultiDesk 0.11.2 artifact.
           No application code, personal access token, or persistent private-repository access
           is needed by this public workflow. The handed-off URL only reads the distribution ZIP.
           """
@@ -78,19 +78,19 @@ jobs:
           import zipfile
           
           REPOSITORY = "LucasLPDev/MultiDesk-LLP-Downloads"
-          TAG = "v0.11.1"
-          PREVIOUS_TAG = "v0.11.0"
+          TAG = "v0.11.2"
+          PREVIOUS_TAG = "v0.11.1"
           SOURCE_REPOSITORY_ID = "1436089111"
-          SOURCE_RUN = 42260876029
-          RELEASE_NAME = "MultiDesk-LLP 0.11.1 — menos GPU e CPU com o PokéIdle"
-          RELEASE_BODY = "## Novidades da 0.11.1\n\nCorreção de consumo de GPU/CPU com o PokéIdle (COR-19). Conexão, temporizadores, captura, /hunt, Rotom e o lançador continuam como antes.\n\n- **Contas fora da tela não desenham a animação:** bandeja, janela minimizada, contas ocultas no Foco e painéis sobre as contas.\n- **Até 30 quadros por segundo** com a conta visível e **até 10** com outra janela em foco, como um jogo.\n- **Zoom abaixo de 100%:** a animação usa a resolução de 100%, em vez de até quatro vezes mais pixels.\n- O leitor de níveis observa somente nome, nível e equipe.\n\nTudo ajustável em **Configurações → Desempenho da cena do PokéIdle**; desligar as opções devolve o comportamento da 0.11.0.\n\n## Atualização pelo aplicativo\n\nConfigurações → Atualizações → Verificar versão → Atualizar agora → Reiniciar e concluir.\n\nO Setup atualiza na mesma pasta e preserva os dados do MultiDesk. Para uma instalação nova, use MultiDesk-LLP-Setup-0.11.1.exe abaixo.\n\nInstalador Windows x64, validado na atualização da 0.11.0 para a 0.11.1. Lançador e sons preservados.\n"
-          ARCHIVE_SHA256 = 'f5274eb2bdb099ab448ef2db21f8fb4adc47b17ef4b5a659b8cc239f103a96a8'
-          ARCHIVE_SIZE = 121248012
-          INSTALLER = "MultiDesk-LLP-Setup-0.11.1.exe"
-          INSTALLER_SIZE = 121108097
-          INSTALLER_SHA512 = 'BQZ/4j3wpszjlwkScO45hFJEfDR9mMCp46wbUonWrcfGrtD1+/fNSEzb/1scnjlWeDkvQxExbwTJrVPuy3XEkg=='
-          EXPECTED = {'latest.yml': '3aebf5fbfb5406043fbe0033f850bad2c8e3a6f2b16136aed01a3f335aa08a2d', 'MultiDesk-LLP-Setup-0.11.1.exe': '1188848c158f8afa10631dcd226694e960bd8a6897a23482610f932330f19944', 'MultiDesk-LLP-Setup-0.11.1.exe.blockmap': '5334a03c4778762efd4641d1983f0fdea4fe21cdd911e1327c596f659052365f', 'SHA256SUMS.txt': '500de56ff50510cce1aa8434fd7df008630d20316f65c56d682d5fd36096eaa3'}
-          ARCHIVE_ENTRIES = {'release/latest.yml': '3aebf5fbfb5406043fbe0033f850bad2c8e3a6f2b16136aed01a3f335aa08a2d', 'release/MultiDesk-LLP-Setup-0.11.1.exe': '1188848c158f8afa10631dcd226694e960bd8a6897a23482610f932330f19944', 'release/MultiDesk-LLP-Setup-0.11.1.exe.blockmap': '5334a03c4778762efd4641d1983f0fdea4fe21cdd911e1327c596f659052365f', 'release/SHA256SUMS.txt': '500de56ff50510cce1aa8434fd7df008630d20316f65c56d682d5fd36096eaa3'}
+          SOURCE_RUN = 42364451822
+          RELEASE_NAME = "MultiDesk-LLP 0.11.2 — Cena simplificada com o PokéIdle 1.408.7"
+          RELEASE_BODY = "## Novidades da 0.11.2\n\nCompatibilidade com o PokéIdle 1.408.7 (COR-23). A atualização do jogo de 07/11/2026 mudou a cena, e o MultiDesk recusava a Cena simplificada com a mensagem de versão não compatível; o Desempenho da cena da 0.11.1 também ficava inativo.\n\n- **Cena simplificada** volta a funcionar em ⋯ do perfil.\n- **Desempenho da cena** volta a valer: pausa fora da tela, limite de quadros e resolução pelo zoom.\n- Páginas abertas com a versão anterior do jogo continuam compatíveis.\n\n## Atualização pelo aplicativo\n\nConfigurações → Atualizações → Verificar versão → Atualizar agora → Reiniciar e concluir.\n\nO Setup atualiza na mesma pasta e preserva os dados do MultiDesk. Para uma instalação nova, use MultiDesk-LLP-Setup-0.11.2.exe abaixo.\n\nInstalador Windows x64, validado na atualização da 0.11.1 para a 0.11.2. Lançador e sons preservados.\n"
+          ARCHIVE_SHA256 = '4fe91e130dbf6e4ef3e4bb8723607276f34571d6fe9d077291af8209a7b6bf99'
+          ARCHIVE_SIZE = 121248051
+          INSTALLER = "MultiDesk-LLP-Setup-0.11.2.exe"
+          INSTALLER_SIZE = 121108135
+          INSTALLER_SHA512 = 'gvfWf17v30EqiUFmynZegtZuTe88UgNZ41XcFanM8tGkynaTeqBXfjcfSJi+TcfRUrjWOQdvO4rxhCCc1RD+hg=='
+          EXPECTED = {'latest.yml': 'a7dfd2a03a1994962f3f1ba5370162d12b6c2fd8543dc3db7a2d2d8b659cceeb', 'MultiDesk-LLP-Setup-0.11.2.exe': 'abdefc1745032208aad1ebd6a92c374e4f336e2e61422ea89deee1fcba55b26d', 'MultiDesk-LLP-Setup-0.11.2.exe.blockmap': 'e360bf09b25868746b372cd182d58050c396d4efb84be4d2b7cee9a4439fb441', 'SHA256SUMS.txt': '83dd1b9e2335f7fe03d57e3a098ea959a4f306275a695467fd9d5f2cefde658c'}
+          ARCHIVE_ENTRIES = {'release/latest.yml': 'a7dfd2a03a1994962f3f1ba5370162d12b6c2fd8543dc3db7a2d2d8b659cceeb', 'release/MultiDesk-LLP-Setup-0.11.2.exe': 'abdefc1745032208aad1ebd6a92c374e4f336e2e61422ea89deee1fcba55b26d', 'release/MultiDesk-LLP-Setup-0.11.2.exe.blockmap': 'e360bf09b25868746b372cd182d58050c396d4efb84be4d2b7cee9a4439fb441', 'release/SHA256SUMS.txt': '83dd1b9e2335f7fe03d57e3a098ea959a4f306275a695467fd9d5f2cefde658c'}
           
           class NoRedirect(urllib.request.HTTPRedirectHandler):
               def redirect_request(self, req, fp, code, msg, headers, newurl):
@@ -129,7 +129,7 @@ jobs:
               ensure(len(assets[INSTALLER]) == INSTALLER_SIZE, "Installer size differs from validated CI")
               ensure(base64.b64encode(hashlib.sha512(assets[INSTALLER]).digest()).decode() == INSTALLER_SHA512, "Installer SHA-512 differs from validated CI")
               feed = assets["latest.yml"].decode("utf-8")
-              ensure("version: 0.11.1\n" in feed, "Feed version mismatch")
+              ensure("version: 0.11.2\n" in feed, "Feed version mismatch")
               ensure("path: " + INSTALLER + "\n" in feed, "Feed installer path mismatch")
               ensure("  - url: " + INSTALLER + "\n" in feed, "Feed installer URL mismatch")
               ensure("    size: " + str(INSTALLER_SIZE) + "\n" in feed, "Feed installer size mismatch")
@@ -220,7 +220,7 @@ jobs:
               except Exception:
                   raise RuntimeError("Distribution archive could not be downloaded; the temporary URL may have expired") from None
               assets = checked_payload(archive)
-              print("Validated the exact four distribution assets from private CI run " + str(SOURCE_RUN) + ": Windows, Node tests, scene drawing budget, simplified scene, controls, workspaces, HUD, Ultra, plugins, packaged modules and NSIS upgrade from 0.11.0 passed")
+              print("Validated the exact four distribution assets from private CI run " + str(SOURCE_RUN) + ": Windows, Node tests, scene drawing budget, simplified scene, controls, workspaces, HUD, Ultra, plugins, packaged modules and NSIS upgrade from 0.11.1 passed")
               destination = api("", token)
               ensure(destination.get("full_name") == REPOSITORY and destination.get("private") is False, "Distribution repository must be public")
               latest = api("/releases/latest", token)
