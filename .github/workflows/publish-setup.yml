@@ -1,5 +1,5 @@
-name: Publish validated Setup 0.11.2
-run-name: Publish validated MultiDesk Setup 0.11.2
+name: Publish validated Setup 0.11.3
+run-name: Publish validated MultiDesk Setup 0.11.3
 # The temporary read URL of the private candidate carries a credential. It never
 # appears in logs, inputs or chat: this run creates a one-off key pair, prints only
 # the public key, and waits for .github/publish-request.enc on its own branch, which
@@ -61,7 +61,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PYTHON'
-          """One-time publication of the exact, privately validated MultiDesk 0.11.2 artifact.
+          """One-time publication of the exact, privately validated MultiDesk 0.11.3 artifact.
           No application code, personal access token, or persistent private-repository access
           is needed by this public workflow. The handed-off URL only reads the distribution ZIP.
           """
@@ -78,19 +78,19 @@ jobs:
           import zipfile
           
           REPOSITORY = "LucasLPDev/MultiDesk-LLP-Downloads"
-          TAG = "v0.11.2"
-          PREVIOUS_TAG = "v0.11.1"
+          TAG = "v0.11.3"
+          PREVIOUS_TAG = "v0.11.2"
           SOURCE_REPOSITORY_ID = "1436089111"
-          SOURCE_RUN = 42364451822
-          RELEASE_NAME = "MultiDesk-LLP 0.11.2 — Cena simplificada com o PokéIdle 1.408.7"
-          RELEASE_BODY = "## Novidades da 0.11.2\n\nCompatibilidade com o PokéIdle 1.408.7 (COR-23). A atualização do jogo de 07/11/2026 mudou a cena, e o MultiDesk recusava a Cena simplificada com a mensagem de versão não compatível; o Desempenho da cena da 0.11.1 também ficava inativo.\n\n- **Cena simplificada** volta a funcionar em ⋯ do perfil.\n- **Desempenho da cena** volta a valer: pausa fora da tela, limite de quadros e resolução pelo zoom.\n- Páginas abertas com a versão anterior do jogo continuam compatíveis.\n\n## Atualização pelo aplicativo\n\nConfigurações → Atualizações → Verificar versão → Atualizar agora → Reiniciar e concluir.\n\nO Setup atualiza na mesma pasta e preserva os dados do MultiDesk. Para uma instalação nova, use MultiDesk-LLP-Setup-0.11.2.exe abaixo.\n\nInstalador Windows x64, validado na atualização da 0.11.1 para a 0.11.2. Lançador e sons preservados.\n"
-          ARCHIVE_SHA256 = '4fe91e130dbf6e4ef3e4bb8723607276f34571d6fe9d077291af8209a7b6bf99'
-          ARCHIVE_SIZE = 121248051
-          INSTALLER = "MultiDesk-LLP-Setup-0.11.2.exe"
-          INSTALLER_SIZE = 121108135
-          INSTALLER_SHA512 = 'gvfWf17v30EqiUFmynZegtZuTe88UgNZ41XcFanM8tGkynaTeqBXfjcfSJi+TcfRUrjWOQdvO4rxhCCc1RD+hg=='
-          EXPECTED = {'latest.yml': 'a7dfd2a03a1994962f3f1ba5370162d12b6c2fd8543dc3db7a2d2d8b659cceeb', 'MultiDesk-LLP-Setup-0.11.2.exe': 'abdefc1745032208aad1ebd6a92c374e4f336e2e61422ea89deee1fcba55b26d', 'MultiDesk-LLP-Setup-0.11.2.exe.blockmap': 'e360bf09b25868746b372cd182d58050c396d4efb84be4d2b7cee9a4439fb441', 'SHA256SUMS.txt': '83dd1b9e2335f7fe03d57e3a098ea959a4f306275a695467fd9d5f2cefde658c'}
-          ARCHIVE_ENTRIES = {'release/latest.yml': 'a7dfd2a03a1994962f3f1ba5370162d12b6c2fd8543dc3db7a2d2d8b659cceeb', 'release/MultiDesk-LLP-Setup-0.11.2.exe': 'abdefc1745032208aad1ebd6a92c374e4f336e2e61422ea89deee1fcba55b26d', 'release/MultiDesk-LLP-Setup-0.11.2.exe.blockmap': 'e360bf09b25868746b372cd182d58050c396d4efb84be4d2b7cee9a4439fb441', 'release/SHA256SUMS.txt': '83dd1b9e2335f7fe03d57e3a098ea959a4f306275a695467fd9d5f2cefde658c'}
+          SOURCE_RUN = 42820813937
+          RELEASE_NAME = "MultiDesk-LLP 0.11.3 — /hunt 1.0.17 e Rotom 1.5.6"
+          RELEASE_BODY = "## Novidades da 0.11.3\n\nCompatibilidade com as versões atuais dos plugins (COR-24). A loja passou a servir /hunt 1.0.17 e Rotom 1.5.6, e o MultiDesk recusava instalar ou atualizar os plugins como \"versão ainda não validada\".\n\n- **/hunt 1.0.17** (modos Shiny e Fragmento no ranking, estimativa com AoE) e **Rotom 1.5.6** aceitos após revisão: assinatura oficial, sem permissões novas, rede apenas no próprio pokeidle.io.\n- As compras automáticas do Rotom continuam começando **desligadas**; a Economia segue pausando os dois plugins.\n- Instalações existentes (/hunt 1.0.6, 1.0.12, 1.0.13 e Rotom 1.5.2) continuam funcionando; atualizar o plugin segue sendo escolha sua em Plugins.\n\n## Atualização pelo aplicativo\n\nConfigurações → Atualizações → Verificar versão → Atualizar agora → Reiniciar e concluir.\n\nO Setup atualiza na mesma pasta e preserva os dados do MultiDesk. Para uma instalação nova, use MultiDesk-LLP-Setup-0.11.3.exe abaixo.\n\nInstalador Windows x64, validado na atualização da 0.11.2 para a 0.11.3. Lançador e sons preservados.\n"
+          ARCHIVE_SHA256 = 'e24a135f50888005e67ebeb6dc22f3efa596bdcf7159983ef5e5103a8edde923'
+          ARCHIVE_SIZE = 121248572
+          INSTALLER = "MultiDesk-LLP-Setup-0.11.3.exe"
+          INSTALLER_SIZE = 121108583
+          INSTALLER_SHA512 = 'rJwPK5xB9kGfddzvsg6+Fl2B8LPcfWfFieYiX/NhYiSCQU6kHrtCMsGWeg42eVNA7nO+8rXbhmCPtD/UheMmIw=='
+          EXPECTED = {'latest.yml': 'e687517e2cb73c86e707d22ffccc994c86dc13763469641c4ec16a2837db069a', 'MultiDesk-LLP-Setup-0.11.3.exe': '7c03afcfd4bec21a684defa5dfaeebdeb426aeb4ad39e3a41a267c4d0ae053c1', 'MultiDesk-LLP-Setup-0.11.3.exe.blockmap': '9dd61f6d8741234a4fac08b46b6126231923a9557127c8fa0547e43e802dde41', 'SHA256SUMS.txt': 'b33009965b2106ec9845957b6ed29b878ac33fc3175835fa212f7b38e4bf8287'}
+          ARCHIVE_ENTRIES = {'release/latest.yml': 'e687517e2cb73c86e707d22ffccc994c86dc13763469641c4ec16a2837db069a', 'release/MultiDesk-LLP-Setup-0.11.3.exe': '7c03afcfd4bec21a684defa5dfaeebdeb426aeb4ad39e3a41a267c4d0ae053c1', 'release/MultiDesk-LLP-Setup-0.11.3.exe.blockmap': '9dd61f6d8741234a4fac08b46b6126231923a9557127c8fa0547e43e802dde41', 'release/SHA256SUMS.txt': 'b33009965b2106ec9845957b6ed29b878ac33fc3175835fa212f7b38e4bf8287'}
           
           class NoRedirect(urllib.request.HTTPRedirectHandler):
               def redirect_request(self, req, fp, code, msg, headers, newurl):
@@ -129,7 +129,7 @@ jobs:
               ensure(len(assets[INSTALLER]) == INSTALLER_SIZE, "Installer size differs from validated CI")
               ensure(base64.b64encode(hashlib.sha512(assets[INSTALLER]).digest()).decode() == INSTALLER_SHA512, "Installer SHA-512 differs from validated CI")
               feed = assets["latest.yml"].decode("utf-8")
-              ensure("version: 0.11.2\n" in feed, "Feed version mismatch")
+              ensure("version: 0.11.3\n" in feed, "Feed version mismatch")
               ensure("path: " + INSTALLER + "\n" in feed, "Feed installer path mismatch")
               ensure("  - url: " + INSTALLER + "\n" in feed, "Feed installer URL mismatch")
               ensure("    size: " + str(INSTALLER_SIZE) + "\n" in feed, "Feed installer size mismatch")
@@ -220,7 +220,7 @@ jobs:
               except Exception:
                   raise RuntimeError("Distribution archive could not be downloaded; the temporary URL may have expired") from None
               assets = checked_payload(archive)
-              print("Validated the exact four distribution assets from private CI run " + str(SOURCE_RUN) + ": Windows, Node tests, scene drawing budget, simplified scene, controls, workspaces, HUD, Ultra, plugins, packaged modules and NSIS upgrade from 0.11.1 passed")
+              print("Validated the exact four distribution assets from private CI run " + str(SOURCE_RUN) + ": Windows, Node tests, scene drawing budget, simplified scene, controls, workspaces, HUD, Ultra, plugins, packaged modules and NSIS upgrade from 0.11.2 passed")
               destination = api("", token)
               ensure(destination.get("full_name") == REPOSITORY and destination.get("private") is False, "Distribution repository must be public")
               latest = api("/releases/latest", token)
